@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tgi-gemma-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gemma-server
+  template:
+    metadata:
+      labels:
+        app: gemma-server
+        ai.gke.io/model: gemma-2-27b-it
+        ai.gke.io/inference-server: text-generation-inference
+    spec:
+      containers:
+      - name: inference-server
+        image: us-docker.pkg.dev/deeplearning-platform-release/gcr.io/huggingface-text-generation-inference-cu121.2-1.ubuntu2204.py310
+        resources:
+          requests:
+            cpu: "29"
+            memory: "116Gi"
+            ephemeral-storage: "40Gi"
+            nvidia.com/gpu: 4
+          limits:
+            cpu: "29"
+            memory: "116Gi"
+            ephemeral-storage: "40Gi"
+            nvidia.com/gpu: 4
+        env:
+        - name: AIP_HTTP_PORT
+          value: '8000'
+        - name: NUM_SHARD
+          value: '4'
+        - name: MAX_INPUT_LENGTH
+          value: '1562'
+        - name: MAX_TOTAL_TOKENS
+          value: '2048'
+        - name: MAX_BATCH_PREFILL_TOKENS
+          value: '2048'
+        - name: CUDA_MEMORY_FRACTION
+          value: '0.93'
+        - name: MODEL_ID
+          value: google/gemma-2-27b-it
+        - name: HUGGING_FACE_HUB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: hf-secret
+              key: access_token
+        volumeMounts:
+        - mountPath: /dev/shm
+          name: dshm
+      volumes:
+      - name: dshm
+        emptyDir:
+          medium: Memory
+      nodeSelector:
+        cloud.google.com/gke-accelerator: nvidia-l4
+      tolerations:
+      - key: "nvidia.com/gpu"
+        operator: "Exists"
+        effect: "NoSchedule"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gemma-service
+spec:
+  selector:
+    app: gemma-server
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 8000
+    targetPort: 8000
