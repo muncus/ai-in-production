@@ -18,7 +18,7 @@ previous steps. I've done my best to be explicit about any dependencies below,
 but if I missed any, feel free to file an issue.
 
 
-### [Self Hosted Gemma2](TODO)
+### [Self Hosted Gemma2](./hosted-gemma/README.md)
 
 - **Objective**: Deploy your own version of Google's Gemma2 model on a new GKE
     Standard cluster, with a GPU-enabled node pool.
