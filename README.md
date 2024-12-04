@@ -9,8 +9,6 @@ Kubernetes clusters in a reliable and scalable way.
 
 ## Prerequisites
 
-- A GKE cluster that includes GPUs and/or TPUs
-    - If you don't already have one, you can [use this tutorial]() to create one.
 - A http://huggingface.co account
 
 ## Exercises
@@ -22,8 +20,8 @@ but if I missed any, feel free to file an issue.
 
 ### [Self Hosted Gemma2](TODO)
 
-- **Objective**: Deploy your own version of Google's Gemma model to an existing
-    GKE cluster.
+- **Objective**: Deploy your own version of Google's Gemma2 model on a new GKE
+    Standard cluster, with a GPU-enabled node pool.
 
 This exercise deploys our LLM and discusses some of the first choices you'll
 make in running AI workloads, like choosing accelerators and your model-serving
@@ -32,6 +30,8 @@ layer.
 This establishes our starting point for the remaining exercises. If you already
 have a model to play with, you're welcome to skip this step - though some
 changes may be necessary.
+
+## Future Topics
 
 ### [Server Telemetry](TODO)
 
@@ -42,7 +42,7 @@ This exercise covers OpenTelemetry metrics and traces that are available from
 HuggingFace's TGI server, and how to create SLOs to ensure your AI is performing
 as expected.
 
-### [03 - Scaling with expected traffic]()
+### [Scaling with expected traffic]()
 
 - **Objective**: Understand the scaling characteristics of your model, and what
     factors affect the 'performance curve'.
@@ -52,7 +52,6 @@ expected traffic affects your scaling choices. It also covers TGI's available
 options that influence production behavior (for example, maximum concurrent
 requests).
 
-## Future Topics
 
 ### [Versioning and Rollouts](TODO)
 
